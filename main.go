@@ -54,6 +54,10 @@ func main() {
 	filePath := os.Args[1]
 	fileName := filepath.Base(filePath)
 	ip := getIP()
+	if ip == "" {
+		showError("Could not find LAN address")
+		return
+	}
 
 	ln, err := net.Listen("tcp", ip+":0")
 	if err != nil {
