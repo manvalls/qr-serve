@@ -3,6 +3,7 @@ package main
 import (
 	"net"
 	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 
@@ -73,7 +74,7 @@ func main() {
 
 	go http.Serve(ln, nil)
 
-	q, _ := qrcode.New("http://"+ln.Addr().String()+"/"+fileName, qrcode.Medium)
+	q, _ := qrcode.New("http://"+ln.Addr().String()+"/"+url.QueryEscape(fileName), qrcode.Medium)
 	bm, _ := walk.NewBitmapFromImage(q.Image(size))
 
 	MainWindow{
