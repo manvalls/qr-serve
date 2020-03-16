@@ -32,9 +32,16 @@ func getIP() string {
 	return ""
 }
 
+func getIcon() *walk.Icon {
+	q, _ := qrcode.New("QR Serve", qrcode.Medium)
+	ic, _ := walk.NewIconFromImage(q.Image(64))
+	return ic
+}
+
 func showError(text string) {
 	MainWindow{
 		Title:  "QR Serve",
+		Icon:   getIcon(),
 		Size:   Size{size + 100, 200},
 		Layout: VBox{},
 		Children: []Widget{
@@ -79,6 +86,7 @@ func main() {
 
 	MainWindow{
 		Title:  fileName,
+		Icon:   getIcon(),
 		Size:   Size{size + 100, size + 100},
 		Layout: VBox{},
 		Children: []Widget{
