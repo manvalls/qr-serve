@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"sync"
 
 	"github.com/lxn/walk"
 	. "github.com/lxn/walk/declarative"
@@ -54,6 +55,9 @@ func showError(text string) {
 }
 
 func main() {
+	wg := sync.WaitGroup{}
+	defer wg.Wait()
+
 	if len(os.Args) < 2 {
 		showError("File not specified. Please open your file with QR Serve.")
 		return
@@ -76,6 +80,9 @@ func main() {
 	defer ln.Close()
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		wg.Add(1)
+		defer wg.Done()
+
 		http.ServeFile(w, r, filePath)
 	})
 
@@ -94,10 +101,6 @@ func main() {
 				MinSize: Size{size, size},
 				MaxSize: Size{size, size},
 				Image:   bm,
-			},
-			TextLabel{
-				Text:          "Close this window when you're done downloading the file",
-				TextAlignment: AlignHCenterVCenter,
 			},
 		},
 	}.Run()
