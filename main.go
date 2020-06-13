@@ -88,7 +88,12 @@ func main() {
 
 	go http.Serve(ln, nil)
 
-	q, _ := qrcode.New("http://"+ln.Addr().String()+"/"+url.QueryEscape(fileName), qrcode.RecoveryLevel(0))
+	urlFileName := url.QueryEscape(fileName)
+	if len(urlFileName) > 40 {
+		urlFileName = urlFileName[0:40]
+	}
+
+	q, _ := qrcode.New("http://"+ln.Addr().String()+"/"+urlFileName, qrcode.RecoveryLevel(0))
 	bm, _ := walk.NewBitmapFromImage(q.Image(size))
 
 	MainWindow{
